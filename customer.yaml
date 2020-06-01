@@ -1,0 +1,370 @@
+openapi: '3.0.2'
+info:
+  title: Raizama Customer MS
+  version: 1.0.0
+  description: |
+    # Overview
+
+    All customers sollutions for Raizama project.
+
+    # Change history
+
+    | Revision | API Version | Status | Author | Description | Date |
+    | --- | --- | --- | --- | --- | --- |
+    | 1 | v1 | draft | Izalena Barbosa | Initial draft | 18/05/2020 |
+
+paths:
+  /:
+    post:
+      security:
+        - System: []
+      summary: 'Add a new customer'
+      tags:
+        - customers
+      description: |
+        Use this operation to add new customer to Raizama database
+      parameters:
+        - name: X-Correlation-Id
+          in: header
+          schema:
+            $ref: '#/components/schemas/correlation-id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customer-minimal-object'
+      responses:
+        '201':
+          description: 'Added customer'
+          headers:
+            X-Correlation-Id:
+              $ref: '#/components/headers/X-Correlation-Id'
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customer-object'
+        '400':
+          $ref: '#/components/responses/400-error-response'
+        '401':
+          $ref: '#/components/responses/401-error-response'
+        '404':
+          $ref: '#/components/responses/404-error-response'
+        '500':
+          $ref: '#/components/responses/500-error-response'
+
+  /{customer-id}:
+    get:
+      security:
+        - System: []
+        - Access: []
+      summary: 'Retrieve a customer'
+      tags:
+        - customers
+      description: |
+        Use this operation to retreive the information of a customer
+      parameters:
+        - name: customer-id
+          in: path
+          schema:
+            $ref: '#/components/schemas/customer-id'
+          required: true
+        - name: X-User-Authorization
+          in: header
+          description: The customer Access Token
+          required: true
+          schema:
+            $ref: '#/components/schemas/user-autorization'
+        - name: X-Correlation-Id
+          in: header
+          schema:
+            $ref: '#/components/schemas/correlation-id'
+      responses:
+        '200':
+          description: 'The requested customer'
+          headers:
+            X-Correlation-Id:
+              $ref: '#/components/headers/X-Correlation-Id'
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customer-object'
+        '400':
+          $ref: '#/components/responses/400-error-response'
+        '401':
+          $ref: '#/components/responses/401-error-response'
+        '404':
+          $ref: '#/components/responses/404-error-response'
+        '500':
+          $ref: '#/components/responses/500-error-response'
+    put:
+      security:
+        - System: []
+        - Access: []
+      summary: 'Update a customer'
+      tags:
+        - customers
+      description: |
+        Use this operation to update the information of a customer
+      parameters:
+        - name: customer-id
+          in: path
+          schema:
+            $ref: '#/components/schemas/customer-id'
+          required: true
+        - name: X-User-Authorization
+          in: header
+          description: The customer Access Token
+          required: true
+          schema:
+            $ref: '#/components/schemas/user-autorization'
+        - name: X-Correlation-Id
+          in: header
+          schema:
+            $ref: '#/components/schemas/correlation-id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customer-minimal-object'
+      responses:
+        '200':
+          description: 'The requested customer'
+          headers:
+            X-Correlation-Id:
+              $ref: '#/components/headers/X-Correlation-Id'
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customer-object'
+        '400':
+          $ref: '#/components/responses/400-error-response'
+        '401':
+          $ref: '#/components/responses/401-error-response'
+        '404':
+          $ref: '#/components/responses/404-error-response'
+        '500':
+          $ref: '#/components/responses/500-error-response'
+
+  
+
+  /healthcheck:
+    get:
+      summary: Checks the microservices health
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: 'The microservice is up and running'
+          content:
+            application/json:
+              example:
+                {
+                  status: UP
+                }
+
+  /info:
+    get:
+      summary: Checks the microservices information
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: 'The microservice informations'
+          content:
+            application/json:
+              example:
+                {
+                  "build": {
+                    "version": "1.0.0",
+                    "artifact": "customer-ms-raizama",
+                    "name": "Customer Microservice",
+                    "group": "com.raizama.{{username}}.microservices",
+                    "time": "2020-05-18T18:46:26.143Z"
+                  }
+                }
+
+components:
+  responses:
+    400-error-response:
+      description: Bad Request
+      headers:
+        X-Correlation-Id:
+          $ref: '#/components/headers/X-Correlation-Id'
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          example:
+            {
+              "error_code": "E_CST_400",
+              "description": "Missing required request parameters"
+            }
+    401-error-response:
+      description: Unauthorized
+      headers:
+        X-Correlation-Id:
+          $ref: '#/components/headers/X-Correlation-Id'
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          example:
+            {
+              "error_code": "E_CST_401",
+              "description": "Invalid System Token in request"
+            }
+    404-error-response:
+      description: Not Found
+      headers:
+        X-Correlation-Id:
+          $ref: '#/components/headers/X-Correlation-Id'
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          example:
+            {
+              "error_code": "E_CST_404",
+              "description": "Resource Not Found"
+            }
+    500-error-response:
+      description: Internal Server Error
+      headers:
+        X-Correlation-Id:
+          $ref: '#/components/headers/X-Correlation-Id'
+        X-Request-Id:
+          $ref: '#/components/headers/X-Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error-response'
+          example:
+            {
+              "error_code": "E_CST_500",
+              "description": "An Internal Server Error occurred"
+            }
+
+  schemas:
+    ## CUSTOMER
+    customer-minimal-object:
+      type: object
+      description: The object representing the customer
+      required:
+        - firstname
+        - lastname
+      properties:
+        firstname:
+          $ref: '#/components/schemas/customer-firstname'
+        lastname:
+          $ref: '#/components/schemas/customer-lastname'
+        gender:
+          $ref: '#/components/schemas/customer-gender'
+        dob:
+          $ref: '#/components/schemas/customer-dob'
+    customer-object:
+      type: object
+      description: The object representing the customer
+      required:
+        - id
+        - firstname
+        - lastname
+      properties:
+        id:
+          $ref: '#/components/schemas/customer-id'
+      allOf:
+        - $ref: '#/components/schemas/customer-minimal-object'
+    customer-id:
+      type: string
+      description: The id of a customer
+      minLength: 6
+      maxLength: 10
+      pattern: '^CST[0-9]{7}$'
+      example: 'CST0000001'
+    customer-firstname:
+      type: string
+      description: The first name of a customer
+      minLength: 1
+      maxLength: 50
+      example: 'Bob'
+    customer-lastname:
+      type: string
+      description: The last name of a customer
+      minLength: 1
+      maxLength: 50
+      example: 'Smith'
+    customer-gender:
+      type: string
+      description: The gender of a customer
+      enum:
+        - male
+        - female
+      example: male
+    customer-dob:
+      type: string
+      description: The date of birth of a customer
+      format: 'date'
+      pattern: 'MM-dd-yyyy'
+      example: '12-25-1980'
+      
+    ## ERROR
+    error-response:
+      type: object
+      required:
+        - error_code
+        - description
+      properties:
+        error_code:
+          type: string
+          minLength: 1
+          description: Code representing the error e.g. E_PRD_000
+        description:
+          type: string
+          minLength: 1
+          description: Description of the error
+    correlation-id:
+      type: string
+      format: uuid
+      description: Returns the correlation id received/generated by the API
+    request-id:
+      type: string
+      format: uuid
+      description: Returns the request id generated by the API
+    user-autorization:
+      type: string
+      format: bearer jwt
+      description: The customer Access Token
+
+  headers:
+    X-Correlation-Id:
+      schema:
+        $ref: '#/components/schemas/correlation-id'
+    X-Request-Id:
+      schema:
+        $ref: '#/components/schemas/request-id'
+    X-User-Authorization:
+      schema:
+        $ref: '#/components/schemas/user-autorization'
+
+  securitySchemes:
+    System:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: 'http://localhost:8080/system-token'
+    Access:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'http://localhost:8080/access-token'

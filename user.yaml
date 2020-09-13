@@ -146,6 +146,55 @@ paths:
           $ref: '#/components/responses/404-error-response'
         '500':
           $ref: '#/components/responses/500-error-response'
+  
+    delete:
+      security:
+        - System: []
+        - Access: []
+      summary: 'Delete a user'
+      tags:
+        - users
+      description: |
+        Use this operation to delete the information of a user
+      parameters:
+        - name: user-id
+          in: path
+          schema:
+            $ref: '#/components/schemas/user-id'
+          required: true
+        - name: X-User-Authorization
+          in: header
+          description: The user Access Token
+          required: true
+          schema:
+            $ref: '#/components/schemas/user-autorization'
+        - name: X-Correlation-Id
+          in: header
+          schema:
+            $ref: '#/components/schemas/correlation-id'
+      responses:
+        '201':
+          description: 'Deleted user'
+          headers:
+            X-Correlation-Id:
+              $ref: '#/components/headers/X-Correlation-Id'
+            X-Request-Id:
+              $ref: '#/components/headers/X-Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user-object'
+        '400':
+          $ref: '#/components/responses/400-error-response'
+        '401':
+          $ref: '#/components/responses/401-error-response'
+        '404':
+          $ref: '#/components/responses/404-error-response'
+        '500':
+          $ref: '#/components/responses/500-error-response'
+      x-scopes:
+        - bank:accounts.detail:delete
+      x-version: "1"
 
   
 

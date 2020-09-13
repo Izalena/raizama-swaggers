@@ -1,28 +1,24 @@
 openapi: '3.0.2'
 info:
-  title: Raizama Customer MS
+  title: Raizama User
   version: 1.0.0
   description: |
     # Overview
-
-    All customers sollutions for Raizama project.
-
+    All users sollutions for Raizama project.
     # Change history
-
     | Revision | API Version | Status | Author | Description | Date |
     | --- | --- | --- | --- | --- | --- |
     | 1 | v1 | draft | Izalena Barbosa | Initial draft | 18/05/2020 |
-
 paths:
-  /:
+  /createUser:
     post:
       security:
         - System: []
-      summary: 'Add a new customer'
+      summary: 'Add a new user'
       tags:
-        - customers
+        - users
       description: |
-        Use this operation to add new customer to Raizama database
+        Use this operation to add new user to Raizama database
       parameters:
         - name: X-Correlation-Id
           in: header
@@ -32,10 +28,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/customer-minimal-object'
+              $ref: '#/components/schemas/user-minimal-object'
       responses:
         '201':
-          description: 'Added customer'
+          description: 'Added user'
           headers:
             X-Correlation-Id:
               $ref: '#/components/headers/X-Correlation-Id'
@@ -44,7 +40,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer-object'
+                $ref: '#/components/schemas/user-object'
         '400':
           $ref: '#/components/responses/400-error-response'
         '401':
@@ -54,25 +50,25 @@ paths:
         '500':
           $ref: '#/components/responses/500-error-response'
 
-  /{customer-id}:
+  /user/{user-id}:
     get:
       security:
         - System: []
         - Access: []
-      summary: 'Retrieve a customer'
+      summary: 'Retrieve a user'
       tags:
-        - customers
+        - users
       description: |
-        Use this operation to retreive the information of a customer
+        Use this operation to retreive the information of a user
       parameters:
-        - name: customer-id
+        - name: user-id
           in: path
           schema:
-            $ref: '#/components/schemas/customer-id'
+            $ref: '#/components/schemas/user-id'
           required: true
         - name: X-User-Authorization
           in: header
-          description: The customer Access Token
+          description: The user Access Token
           required: true
           schema:
             $ref: '#/components/schemas/user-autorization'
@@ -82,7 +78,7 @@ paths:
             $ref: '#/components/schemas/correlation-id'
       responses:
         '200':
-          description: 'The requested customer'
+          description: 'The requested user'
           headers:
             X-Correlation-Id:
               $ref: '#/components/headers/X-Correlation-Id'
@@ -91,7 +87,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer-object'
+                $ref: '#/components/schemas/user-object'
         '400':
           $ref: '#/components/responses/400-error-response'
         '401':
@@ -104,20 +100,20 @@ paths:
       security:
         - System: []
         - Access: []
-      summary: 'Update a customer'
+      summary: 'Update a user'
       tags:
-        - customers
+        - users
       description: |
-        Use this operation to update the information of a customer
+        Use this operation to update the information of a user
       parameters:
-        - name: customer-id
+        - name: user-id
           in: path
           schema:
-            $ref: '#/components/schemas/customer-id'
+            $ref: '#/components/schemas/user-id'
           required: true
         - name: X-User-Authorization
           in: header
-          description: The customer Access Token
+          description: The user Access Token
           required: true
           schema:
             $ref: '#/components/schemas/user-autorization'
@@ -129,10 +125,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/customer-minimal-object'
+              $ref: '#/components/schemas/user-minimal-object'
       responses:
         '200':
-          description: 'The requested customer'
+          description: 'The requested user'
           headers:
             X-Correlation-Id:
               $ref: '#/components/headers/X-Correlation-Id'
@@ -141,7 +137,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/customer-object'
+                $ref: '#/components/schemas/user-object'
         '400':
           $ref: '#/components/responses/400-error-response'
         '401':
@@ -182,8 +178,8 @@ paths:
                 {
                   "build": {
                     "version": "1.0.0",
-                    "artifact": "customer-ms-raizama",
-                    "name": "Customer Microservice",
+                    "artifact": "user-ms-raizama",
+                    "name": "User Microservice",
                     "group": "com.raizama.{{username}}.microservices",
                     "time": "2020-05-18T18:46:26.143Z"
                   }
@@ -257,66 +253,134 @@ components:
             }
 
   schemas:
-    ## CUSTOMER
-    customer-minimal-object:
+    ## User
+    user-minimal-object:
       type: object
-      description: The object representing the customer
-      required:
-        - firstname
-        - lastname
-      properties:
-        firstname:
-          $ref: '#/components/schemas/customer-firstname'
-        lastname:
-          $ref: '#/components/schemas/customer-lastname'
-        gender:
-          $ref: '#/components/schemas/customer-gender'
-        dob:
-          $ref: '#/components/schemas/customer-dob'
-    customer-object:
-      type: object
-      description: The object representing the customer
+      description: The object representing the user
       required:
         - id
-        - firstname
-        - lastname
+        - Dob
+        - Username
+        - Password
+        - Email
+        - Country
+        - State
+        - City
+        - Image
+        - Type
       properties:
         id:
-          $ref: '#/components/schemas/customer-id'
+          $ref: '#/components/schemas/user-id'  
+        dob:
+          $ref: '#/components/schemas/user-dob'  
+        username:
+          $ref: '#/components/schemas/user-username'
+        password:
+          $ref: '#/components/schemas/user-password'
+        email:
+          $ref: '#/components/schemas/user-email'   
+        country:
+          $ref: '#/components/schemas/user-country'
+        state:
+          $ref: '#/components/schemas/user-state'
+        city:
+          $ref: '#/components/schemas/user-city'
+        image:
+          $ref: '#/components/schemas/user-image'
+        type:
+          $ref: '#/components/schemas/user-type'         
+    user-object:
+      type: object
+      description: The object representing the user
+      required:
+        - id
+        - Dob
+        - Username
+        - Password
+        - Email
+        - Country
+        - State
+        - City
+        - Image
+        - Type
+      properties:
+        id:
+          $ref: '#/components/schemas/user-id'  
+        dob:
+          $ref: '#/components/schemas/user-dob'  
+        username:
+          $ref: '#/components/schemas/user-username'
+        password:
+          $ref: '#/components/schemas/user-password'
+        email:
+          $ref: '#/components/schemas/user-email'   
+        country:
+          $ref: '#/components/schemas/user-country'
+        state:
+          $ref: '#/components/schemas/user-state'
+        city:
+          $ref: '#/components/schemas/user-city'
+        image:
+          $ref: '#/components/schemas/user-image'
+        type:
+          $ref: '#/components/schemas/user-type'   
       allOf:
-        - $ref: '#/components/schemas/customer-minimal-object'
-    customer-id:
+        - $ref: '#/components/schemas/user-minimal-object'
+    user-id:
       type: string
-      description: The id of a customer
+      description: The id of a user
       minLength: 6
       maxLength: 10
-      pattern: '^CST[0-9]{7}$'
-      example: 'CST0000001'
-    customer-firstname:
+      pattern: '^USER[0-9]{7}$'
+      example: 'USER0000001'
+    user-dob:
       type: string
-      description: The first name of a customer
-      minLength: 1
-      maxLength: 50
-      example: 'Bob'
-    customer-lastname:
-      type: string
-      description: The last name of a customer
-      minLength: 1
-      maxLength: 50
-      example: 'Smith'
-    customer-gender:
-      type: string
-      description: The gender of a customer
-      enum:
-        - male
-        - female
-      example: male
-    customer-dob:
-      type: string
-      description: The date of birth of a customer
+      description: The date of birth of a user
       format: 'date'
       pattern: 'MM-dd-yyyy'
       example: '12-25-1980'
+    user-username:
+      type: string
+      description: The chosen username
+      minLength: 1
+      maxLength: 50
+      example: 'Izalena'
+    user-password:
+      type: string
+      description: The chosen password
+      minLength: 6
+      maxLength: 8
+      pattern: '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$'
+      example: 'saER123!'
+    user-email:
+      type: string
+      description: The email of a user
+      example: izalena@email.com
+    user-country:
+      type: string
+      description: The country of a user
+      example: Brazil
+    user-state:
+      type: string
+      description: The state of a user
+      example: Rio de Janeiro
+    user-city:
+      type: string
+      description: The city of a user
+      example: niteroi
+    user-image:
+      type: string
+      description: The image of a user
+      format: binary
+      example: IMG213.png
+    user-type:
+      type: string
+      description: The type of a user
+      enum:
+        - client
+        - associate
+      example: client
+
       
     ## ERROR
     error-response:
@@ -344,7 +408,7 @@ components:
     user-autorization:
       type: string
       format: bearer jwt
-      description: The customer Access Token
+      description: The user Access Token
 
   headers:
     X-Correlation-Id:
